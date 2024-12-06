@@ -1,0 +1,96 @@
+@model OrderCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h1>Order</h1>
+
+<h4>Create</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <form asp-action="AddProduct" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label for="SelectedProductId">Select Product</label>
+                @Html.DropDownListFor(model => model.SelectedProductId, Model.ProductsSelectList, "Select a product", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="Quantity">Quantity</label>
+                @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control", type = "number", min = "1" })
+            </div>
+
+            @if(Model.Message!=null)
+            {
+                @Html.DisplayFor(m => m.Message);
+            }
+
+            <br>
+
+            <input type="submit" value="Add to Order" class="btn btn-primary"/>
+        </form>
+        
+        <br>
+        
+        <h3>Order Items</h3>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Sub Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in TempData)
+                {
+                    <tr>
+                        <td>@Model.Products.Find(p => p.Id == int.Parse(item.Key))?.Name</td>
+                        <td>@item.Value</td>
+                        <td>@Model.Products.Find(p => p.Id == int.Parse(item.Key))?.Price</td>
+                        @{
+                            string? q = item.Value?.ToString();
+                            int quantity=0;
+                            @if(q!=null){
+                                quantity = int.Parse(q);
+                            }
+                            <td>@(Model.Products.Find(p => p.Id == int.Parse(item.Key))?.Price * quantity)</td>    
+                        }
+                        
+                    </tr>
+                    
+                }
+            </tbody>
+        </table>
+
+        <div>
+            <label>Total Price: </label>
+            <span id="totalPrice">@Model.TotalPrice.ToString("C")</span>
+        </div>
+
+        <form asp-action="Create" method="post">
+            <input type="hidden" name="TotalPrice" value="@Model.TotalPrice" />
+            <br>
+            <div class="form-group">
+                <input type="submit" value="Finalize Order" class="btn btn-primary" />
+            </div>
+        </form>
+    
+    </div>
+</div>
+
+</br>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

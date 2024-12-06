@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Cafeteria.props" />
+</Project>

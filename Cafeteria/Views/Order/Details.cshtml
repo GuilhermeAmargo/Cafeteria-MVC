@@ -1,0 +1,48 @@
+@model Cafeteria.Models.Order
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Order number @Html.DisplayFor(model => model.Id)</h4>
+    <h4>Order placed on @Html.DisplayFor(model => model.TimeStamp)</h4>
+    <hr />
+    <h4>Order Items</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Sub Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Product.Category</td>  
+                    <td>@item.Quantity</td>
+                    <td>@item.Product.Price</td> 
+                    <td>@(item.Quantity * item.Product.Price)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <dl class="row">
+        <dt class="col-sm-2">Total Price</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.TotalPrice)</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
