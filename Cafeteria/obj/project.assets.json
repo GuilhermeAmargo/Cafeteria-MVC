@@ -8036,11 +8036,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\camar\\OneDrive\\Desktop\\MvcCafeteria\\Cafeteria\\Cafeteria.csproj",
+      "projectUniqueName": "C:\\Users\\camar\\OneDrive\\Desktop\\Cafeteria-MVC\\Cafeteria\\Cafeteria.csproj",
       "projectName": "Cafeteria",
-      "projectPath": "C:\\Users\\camar\\OneDrive\\Desktop\\MvcCafeteria\\Cafeteria\\Cafeteria.csproj",
+      "projectPath": "C:\\Users\\camar\\OneDrive\\Desktop\\Cafeteria-MVC\\Cafeteria\\Cafeteria.csproj",
       "packagesPath": "C:\\Users\\camar\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\camar\\OneDrive\\Desktop\\MvcCafeteria\\Cafeteria\\obj\\",
+      "outputPath": "C:\\Users\\camar\\OneDrive\\Desktop\\Cafeteria-MVC\\Cafeteria\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\camar\\AppData\\Roaming\\NuGet\\NuGet.Config"

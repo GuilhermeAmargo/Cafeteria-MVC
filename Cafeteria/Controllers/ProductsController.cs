@@ -20,31 +20,37 @@ namespace Cafeteria.Controllers
         }
 
         // GET: Products
+        // Lista todos os produtos com filtro de categoriae nome 
         public async Task<IActionResult> Index(string productCategory, string searchString)
         {
             if (_context.Product == null)
             {
+                // Retorna erro se for nulo
                 return Problem("Entity set 'CafeteriaContext.Product'  is null.");
             }
 
-            // Use LINQ to get list of genres.
+            // Lista distinta
             IQueryable<string> categoryQuery =  from p in _context.Product
                                                 orderby p.Category
                                                 select p.Category;
 
+            // Lista de produtos
             var products =  from p in _context.Product
                             select p;
 
+            // Filtra por nomes
             if (!String.IsNullOrEmpty(searchString))
             {
                 products = products.Where(s => s.Name!.ToUpper().Contains(searchString.ToUpper()));
             }
 
+            // Filtra por categoria
             if (!string.IsNullOrEmpty(productCategory))
             {
                 products = products.Where(x => x.Category == productCategory);
             }
 
+            // Retorna a view com os produtos filtrados
             var productCategoryVM = new ProductCategoryViewModel
             {
                 Categories = new SelectList(await categoryQuery.Distinct().ToListAsync()),
@@ -54,13 +60,16 @@ namespace Cafeteria.Controllers
             return View(productCategoryVM);
         }
         // GET: Products/Details/5
+        // Exibe detalhes de um produto
         public async Task<IActionResult> Details(int? id)
         {
+            // Se id é nulo == ERRO
             if (id == null)
             {
                 return NotFound();
             }
 
+            // Busca produto pelo ID
             var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
@@ -72,12 +81,14 @@ namespace Cafeteria.Controllers
         }
 
         // GET: Products/Create
+        // Retorna a view para a criação de um novo produto
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Products/Create
+        // Cria um novo produto
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -94,6 +105,7 @@ namespace Cafeteria.Controllers
         }
 
         // GET: Products/Edit/5
+        // Retorna a view para edição de produto
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -101,6 +113,7 @@ namespace Cafeteria.Controllers
                 return NotFound();
             }
 
+            // Busca produto por ID
             var product = await _context.Product.FindAsync(id);
             if (product == null)
             {
@@ -110,6 +123,7 @@ namespace Cafeteria.Controllers
         }
 
         // POST: Products/Edit/5
+        // Atualiza um produto
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -145,6 +159,7 @@ namespace Cafeteria.Controllers
         }
 
         // GET: Products/Delete/5
+        // Retorna a view para exclusão
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -152,6 +167,7 @@ namespace Cafeteria.Controllers
                 return NotFound();
             }
 
+            // Busca produto pelo ID
             var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
@@ -163,6 +179,7 @@ namespace Cafeteria.Controllers
         }
 
         // POST: Products/Delete/5
+        // Exclui um produto 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -177,6 +194,7 @@ namespace Cafeteria.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Verifica existência de produto
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.Id == id);

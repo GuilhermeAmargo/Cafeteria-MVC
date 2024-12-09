@@ -20,12 +20,14 @@ namespace Cafeteria.Controllers
         }
 
         // GET: Order
+        // Mostra a tela com todos os pedidos
         public async Task<IActionResult> Index()
         {
             return View(await _context.Order.ToListAsync());
         }
 
         // GET: Order/Create
+        // Tela de criação de novo pedido
         public async Task<IActionResult> Create()
         {
             var products = await _context.Product.Where(p => p.Quantity > 0).ToListAsync();
@@ -45,15 +47,18 @@ namespace Cafeteria.Controllers
         }
 
         // POST: Order/AddProduct
+        // Adiciona um novo produto ao pedido
         [HttpPost]
         public async Task<IActionResult> AddProduct(OrderCreateViewModel viewModel)
         {
             var products = await _context.Product.Where(p => p.Quantity > 0).ToListAsync();
 
+            // Busca de produto pelo ID
             var selectedProduct = products.FirstOrDefault(p => p.Id == viewModel.SelectedProductId);
             if (selectedProduct == null)
                 return NotFound("Product not found.");
 
+            // Verifica a quantidade do produto
             if (selectedProduct.Quantity >= viewModel.Quantity)
             {
                 TempData[viewModel.SelectedProductId.ToString()] = viewModel.Quantity;
@@ -63,7 +68,7 @@ namespace Cafeteria.Controllers
                 viewModel.Message = "Insufficient stock.";
             }
 
-            // Atualizar preço total
+            // Calcular preço total do pedido
             viewModel.TotalPrice = TempData.Keys.Sum(key =>
             {
                 TempData.Keep(key);
@@ -72,6 +77,7 @@ namespace Cafeteria.Controllers
                 return product?.Price * quantity ?? 0;
             });
 
+            // Atualiza a lista de produtos
             viewModel.ProductsSelectList = products.Select(p => new SelectListItem
             {
                 Value = p.Id.ToString(),
@@ -84,16 +90,18 @@ namespace Cafeteria.Controllers
         }
 
         // POST: Order/Create
+        // Finaliza e salva o pedido 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderCreateViewModel viewModel)
         {
             if (!TempData.Keys.Any())
             {
+                // Redireciona para index caso não haja produto na lista
                 return RedirectToAction(nameof(Index));
             }
 
-            // Criar o pedido
+            // Criar novo pedido
             var order = new Order
             {
                 TimeStamp = DateTime.Now,
@@ -137,6 +145,7 @@ namespace Cafeteria.Controllers
         }
 
         // GET: Order/Edit/5
+        // Exibe a edição de um pedido
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -154,6 +163,7 @@ namespace Cafeteria.Controllers
         }
 
         // POST: Order/Edit/5
+        // Salva as alterações que foram editadas
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TimeStamp,TotalPrice")] Order order)
@@ -187,6 +197,7 @@ namespace Cafeteria.Controllers
         }
 
         // GET: Order/Details/5
+        // Exibe os detalhes de um pedido
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -208,6 +219,7 @@ namespace Cafeteria.Controllers
         }
 
         // GET: Order/Delete/5
+        // Exibe a confirmação para exclusão
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -227,6 +239,7 @@ namespace Cafeteria.Controllers
         }
 
         // POST: Order/Delete/5
+        // Remove um pedido após exclusão
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

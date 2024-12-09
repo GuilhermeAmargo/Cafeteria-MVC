@@ -14,8 +14,13 @@ namespace Cafeteria.Data
         {
         }
 
+        // Tabela de produtos
         public DbSet<Product> Product { get; set; } = default!;
+
+        // Tabela de pedidos
         public DbSet<Order> Order { get; set; } = default!;
+        
+        // Tabela itens pedidos 
         public DbSet<OrderItem> OrderItem { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
